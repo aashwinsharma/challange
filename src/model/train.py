@@ -1,28 +1,30 @@
 # Import libraries
-
 import argparse
 import glob
 import os
-
 import pandas as pd
-
+from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report
 
+# TO DO: enable autologging (example with MLflow)
+import mlflow
+import mlflow.sklearn
 
-# define functions
+# Define functions
 def main(args):
-    # TO DO: enable autologging
+    # Enable MLflow autologging
+    mlflow.sklearn.autolog()
 
-
-    # read data
+    # Read data
     df = get_csvs_df(args.training_data)
 
-    # split data
+    # Split data
     X_train, X_test, y_train, y_test = split_data(df)
 
-    # train model
-    train_model(args.reg_rate, X_train, X_test, y_train, y_test)
-
+    # Train model and log metrics
+    with mlflow.start_run():
+        train_model(args.reg_rate, X_train, X_test, y_train, y_test)
 
 def get_csvs_df(path):
     if not os.path.exists(path):
@@ -32,43 +34,58 @@ def get_csvs_df(path):
         raise RuntimeError(f"No CSV files found in provided data path: {path}")
     return pd.concat((pd.read_csv(f) for f in csv_files), sort=False)
 
+def split_data(df):
+    # Assume 'Diabetic' is the target column
+    X = df.drop('Diabetic', axis=1)
+    y = df['Diabetic']
 
-# TO DO: add function to split data
-
+    # Split data into train and test sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    return X_train, X_test, y_train, y_test
 
 def train_model(reg_rate, X_train, X_test, y_train, y_test):
-    # train model
-    LogisticRegression(C=1/reg_rate, solver="liblinear").fit(X_train, y_train)
+    # Train logistic regression model
+    model = LogisticRegression(C=1/reg_rate, solver="liblinear")
+    model.fit(X_train, y_train)
 
+    # Predict and evaluate the model
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    report = classification_report(y_test, y_pred)
+
+    print(f"Accuracy: {accuracy}")
+    print(f"Classification Report:\n{report}")
+
+    # Log metrics
+    mlflow.log_metric("accuracy", accuracy)
 
 def parse_args():
-    # setup arg parser
+    # Setup arg parser
     parser = argparse.ArgumentParser()
 
-    # add arguments
-    parser.add_argument("--training_data", dest='training_data',
-                        type=str)
-    parser.add_argument("--reg_rate", dest='reg_rate',
-                        type=float, default=0.01)
+    # Add arguments
+    parser.add_argument("--training_data", dest='training_data', type=str, required=True)
+    parser.add_argument("--reg_rate", dest='reg_rate', type=float, default=0.01)
 
-    # parse args
+    # Parse args
     args = parser.parse_args()
 
-    # return args
+    # Return args
     return args
 
-# run script
+# Run script
 if __name__ == "__main__":
-    # add space in logs
+    # Add space in logs
     print("\n\n")
     print("*" * 60)
 
-    # parse args
+    # Parse args
     args = parse_args()
 
-    # run main function
+    # Run main function
     main(args)
 
-    # add space in logs
+    # Add space in logs
     print("*" * 60)
     print("\n\n")
