@@ -1,15 +1,18 @@
-$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
-code: model
-command: >-
-  python 
-  --
-  --
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.json
+description: Train a model using the diabetes dataset
+display_name: Train Diabetes Model
 inputs:
-  training_data: 
-    type: uri_folder 
-    path: 
-  reg_rate: 0.01
-environment: azureml:AzureML-sklearn-0.24-ubuntu18.04-py37-cpu@latest
-compute: 
-experiment_name: 
-description: 
+  training_data:
+    type: uri_folder
+    mode: ro_mount
+    path: azureml://subscriptions/3f53d715-2da3-4020-895b-b9b7b6158f70/resourcegroups/challange-amit/workspaces/aml-challanage/datastores/workspaceblobstore/paths/UI/2024-09-05_141355_UTC/challange/
+    data_asset: challange-dataassets
+outputs:
+  model:
+    type: mlflow_model
+code: ./src/model
+command: |
+  python train.py --training_data ${{inputs.training_data}} --reg_rate 0.01
+environment:
+  image: mcr.microsoft.com/azureml/openmpi3.1.2-ubuntu18.04
+compute: your-compute-cluster-name
