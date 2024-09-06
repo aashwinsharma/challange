@@ -16,7 +16,7 @@ jobs:
     - name: Azure login
       uses: azure/login@v1.7
       with:
-        creds: ${{secrets.AZURE_CREDENTIALS}}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Submit Azure ML job
       run: |
@@ -28,4 +28,5 @@ jobs:
             compute_target="Serverless" \
             environment="AzureML-ACPT-pytorch-1.13-py38-cuda11.7-gpu:10" \
             inputs.test="azureml:azureml_green_ball_ltc57xbpw2_input_data_test:1"
-
+      env:
+        AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
