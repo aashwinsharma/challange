@@ -21,12 +21,10 @@ jobs:
     - name: Submit Azure ML job
       run: |
         az ml job create --file azureml-job.yaml \
-          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-          --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }} \
+          --resource-group challange-amit \
+          --workspace-name aml-challanage \
           --set \
-            command="pip install scikit-learn && python train.py --training_data ${{ secrets.AZURE_TRAINING_DATA }} --reg_rate 0.01" \
+            command="pip install scikit-learn && python train.py --training_data azureml://subscriptions/3f53d715-2da3-4020-895b-b9b7b6158f70/resourcegroups/challange-amit/workspaces/aml-challanage/datastores/workspaceblobstore/paths/UI/2024-09-06_083257_UTC/challange/ --reg_rate 0.01" \
             compute_target="Serverless" \
             environment="AzureML-ACPT-pytorch-1.13-py38-cuda11.7-gpu:10" \
             inputs.test="azureml:azureml_green_ball_ltc57xbpw2_input_data_test:1"
-      env:
-        AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
