@@ -22,8 +22,8 @@ jobs:
       run: |
         az ml job create \
           --file azureml-job.yaml \
-          --resource-group/-g challange-amit \
-          --workspace-name/-w aml-challanage \
+          --resource-group/ challange-amit \
+          --workspace-name/ aml-challanage \
           --set \
             command="pip install scikit-learn && python train.py --training_data azureml://subscriptions/3f53d715-2da3-4020-895b-b9b7b6158f70/resourcegroups/challange-amit/workspaces/aml-challanage/datastores/workspaceblobstore/paths/UI/2024-09-06_083257_UTC/challange/ --reg_rate 0.01" \
             compute_target="Serverless" \
