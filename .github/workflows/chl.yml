@@ -31,7 +31,7 @@ jobs:
 
     - name: Extract Command Job Schema and Rename Output Key
       run: |
-        jq '. | {command: .command, environment: .environment, inputs: .inputs, outputs: (.outputs | with_entries(if .key == "default" then .key = "renamed_output" else . end))}' full_job_config.json > job_config.yaml
+        jq '. | {command: .command, environment: .environment, inputs: .inputs, outputs: (.outputs | with_entries(if .key == "default" then .key = "azureml:azureml_green_ball_ltc57xbpw2_input_data_test:1" else . end))}' full_job_config.json > job_config.yaml
 
     - name: Create Azure ML Job
       run: |
