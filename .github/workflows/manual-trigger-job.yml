@@ -1,10 +1,12 @@
 name: Trigger Azure ML Existing Job
+
 on:
   workflow_dispatch:
     inputs:
       job_id:
         description: 'Azure ML Job ID to clone and run'
         required: true
+
 jobs:
   trigger-existing-job:
     runs-on: ubuntu-latest
@@ -21,12 +23,17 @@ jobs:
     - name: Install Azure ML extension
       run: az extension add -n ml -y
 
-    - name: Clone and Trigger Azure ML Job
+    - name: Get Existing Job Configuration
       run: |
-        az ml job create --name ${{ github.event.inputs.job_id }} \
-                        --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-                        --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }} \
-                        --set experiment.name="new_experiment_name"
+        az ml job show --name ${{ github.event.inputs.job_id }} \
+                       --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                       --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }} > job_config.json
+
+    - name: Create YAML Configuration from Existing Job
+      run: |
+        az ml job create --file job_config.json \
+                         --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                         --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }}
       env:
         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
