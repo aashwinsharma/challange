@@ -1,12 +1,10 @@
 name: Trigger Azure ML Existing Job
-
 on:
   workflow_dispatch:
     inputs:
       job_id:
         description: 'Azure ML Job ID to clone and run'
         required: true
-
 jobs:
   trigger-existing-job:
     runs-on: ubuntu-latest
