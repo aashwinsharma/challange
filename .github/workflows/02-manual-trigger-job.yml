@@ -1,28 +1,35 @@
-name: Manually trigger an Azure Machine Learning job
+name: Trigger Azure ML Existing Job
 
 on:
   workflow_dispatch:
+    inputs:
+      job_id:
+        description: 'Azure ML Job ID to clone and run'
+        required: true
 
 jobs:
-  train:
+  trigger-existing-job:
     runs-on: ubuntu-latest
-    steps:
-    - name: Check out repo
-      uses: actions/checkout@v3
 
-    - name: Azure login
-      uses: azure/login@v1.7
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Azure Login
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Install Azure ML extension
       run: az extension add -n ml -y
-      
-    - name: Submit Azure ML job
+
+    - name: Clone and Trigger Azure ML Job
       run: |
-      az ml job create --file azureml-job.yaml --resource-group challange-amit --workspace-name aml-challanage
-          --set \
-            command="pip install scikit-learn && python train.py --training_data azureml://subscriptions/3f53d715-2da3-4020-895b-b9b7b6158f70/resourcegroups/challange-amit/workspaces/aml-challanage/datastores/workspaceblobstore/paths/UI/2024-09-06_083257_UTC/challange/ --reg_rate 0.01" \
-            compute_target="Serverless" \
-            environment="AzureML-ACPT-pytorch-1.13-py38-cuda11.7-gpu:10" \
-            inputs.test="azureml:azureml_green_ball_ltc57xbpw2_input_data_test:1"
+        az ml job clone --name ${{ github.event.inputs.job_id }} \
+                        --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                        --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }} \
+                        --set experiment.name="new_experiment_name"
+      env:
+        AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+        AZURE_ML_WORKSPACE: ${{ secrets.AZURE_ML_WORKSPACE }}
