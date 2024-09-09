@@ -29,9 +29,9 @@ jobs:
                        --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
                        --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }} > full_job_config.json
 
-    - name: Extract Command Job Schema
+    - name: Extract Command Job Schema and Rename Output Key
       run: |
-        jq '. | {command: .command, environment: .environment, inputs: .inputs, outputs: .outputs}' full_job_config.json > job_config.yaml
+        jq '. | {command: .command, environment: .environment, inputs: .inputs, outputs: (.outputs | with_entries(if .key == "default" then .key = "renamed_output" else . end))}' full_job_config.json > job_config.yaml
 
     - name: Create Azure ML Job
       run: |
