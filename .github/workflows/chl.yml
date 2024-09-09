@@ -1,4 +1,4 @@
-name: Trigger Azure ML Existing Job
+name: CHL Trigger Azure ML Existing Job
 
 on:
   workflow_dispatch:
@@ -32,10 +32,6 @@ jobs:
     - name: Extract Command Job Schema and Rename Output Key
       run: |
         jq '. | {command: .command, environment: .environment, inputs: .inputs, outputs: (.outputs | with_entries(if .key == "default" then .key = "renamed_output" else . end))}' full_job_config.json > job_config.yaml
-
-    - name: Set Valid Output URI
-      run: |
-        yq e '.outputs.renamed_output.uri = "azureml://datastores/workspaceartifactstore/paths/outputs/"' -i job_config.yaml
 
     - name: Create Azure ML Job
       run: |
