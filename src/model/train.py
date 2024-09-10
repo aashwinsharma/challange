@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 
-# TO DO: enable autologging (example with MLflow)
 import mlflow
 import mlflow.sklearn
 
