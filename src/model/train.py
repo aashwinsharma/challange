@@ -11,6 +11,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import mlflow
 import mlflow.sklearn
 
+
 # Define functions
 def main(args):
     # Enable MLflow autologging
@@ -25,6 +26,7 @@ def main(args):
     # Train model and log metrics
     with mlflow.start_run():
         train_model(args.reg_rate, X_train, X_test, y_train, y_test)
+
 
 def get_csvs_df(path):
     if not os.path.exists(path):
@@ -44,6 +46,7 @@ def split_data(df):
     
     return X_train, X_test, y_train, y_test
 
+
 def train_model(reg_rate, X_train, X_test, y_train, y_test):
     # Train logistic regression model
     model = LogisticRegression(C=1/reg_rate, solver="liblinear")
@@ -59,6 +62,7 @@ def train_model(reg_rate, X_train, X_test, y_train, y_test):
 
     # Log metrics
     mlflow.log_metric("accuracy", accuracy)
+
 
 def parse_args():
     # Setup arg parser
