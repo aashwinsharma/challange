@@ -6,12 +6,22 @@ on:
       - main
 
 jobs:
-  placeholder:
+  run-flake8:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - name: Placeholder
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Specify your Python version here
+
+      - name: Install dependencies
         run: |
-          echo "Will add code checks here in the next challenge"
+          python -m pip install --upgrade pip
+          pip install flake8  # Add other dependencies if needed
+
+      - name: Run flake8
+        run: |
+          flake8 src/model/  # Adjust the path to your Python code

@@ -11,9 +11,6 @@ import mlflow
 import mlflow.sklearn
 
 
-print("MLflow Version:", mlflow.__version__)
-
-# Define functions
 def main(args):
     # Enable MLflow autologging
     mlflow.sklearn.autolog()
@@ -28,13 +25,19 @@ def main(args):
     with mlflow.start_run():
         train_model(args.reg_rate, X_train, X_test, y_train, y_test)
 
+
 def get_csvs_df(path):
     if not os.path.exists(path):
         raise RuntimeError(f"Cannot use non-existent path provided: {path}")
-    csv_files = glob.glob(f"{path}/*.csv")
+    
+    csv_files = glob.glob(
+        f"{path}/*.csv"
+    )
     if not csv_files:
         raise RuntimeError(f"No CSV files found in provided data path: {path}")
+    
     return pd.concat((pd.read_csv(f) for f in csv_files), sort=False)
+
 
 def split_data(df):
     # Assume 'Diabetic' is the target column
@@ -46,10 +49,15 @@ def split_data(df):
     
     return X_train, X_test, y_train, y_test
 
+
 def train_model(reg_rate, X_train, X_test, y_train, y_test):
     # Train logistic regression model
-    model = LogisticRegression(C=1/reg_rate, solver="liblinear")
-    model.fit(X_train, y_train)
+    model = LogisticRegression(
+        C=1 / reg_rate, solver="liblinear"
+    )
+    model.fit(
+        X_train, y_train
+    )
 
     # Predict and evaluate the model
     y_pred = model.predict(X_test)
@@ -62,6 +70,7 @@ def train_model(reg_rate, X_train, X_test, y_train, y_test):
     # Log metrics
     mlflow.log_metric("accuracy", accuracy)
 
+
 def parse_args():
     # Setup arg parser
     parser = argparse.ArgumentParser()
@@ -73,12 +82,11 @@ def parse_args():
     # Parse args
     args = parser.parse_args()
 
-    # Return args
     return args
+
 
 # Run script
 if __name__ == "__main__":
-    # Add space in logs
     print("\n\n")
     print("*" * 60)
 
@@ -88,6 +96,5 @@ if __name__ == "__main__":
     # Run main function
     main(args)
 
-    # Add space in logs
     print("*" * 60)
     print("\n\n")
