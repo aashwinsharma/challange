@@ -10,6 +10,7 @@ on:
 jobs:
   trigger-existing-job:
     runs-on: ubuntu-latest
+    environment: development # Use development environment
 
     steps:
     - name: Checkout repository
@@ -42,3 +43,25 @@ jobs:
         AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
         AZURE_ML_WORKSPACE: ${{ secrets.AZURE_ML_WORKSPACE }}
+
+  production-job:
+    needs: trigger-existing-job
+    runs-on: ubuntu-latest
+    environment: production # Use production environment, requires approval
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Install Azure ML extension
+      run: az extension add -n ml -y
+
+    - name: Create Azure ML Job (Production)
+      run: |
+        az ml job create --file job_config.yaml \
+                         --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                         --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }}
