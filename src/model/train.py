@@ -11,8 +11,8 @@ from sklearn.metrics import accuracy_score, classification_report
 import mlflow
 import mlflow.sklearn
 
+
 def main(args):  # Line 15
-    
     # Enable MLflow autologging
     mlflow.sklearn.autolog()
 
