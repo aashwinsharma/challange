@@ -10,6 +10,9 @@ from sklearn.metrics import accuracy_score, classification_report
 import mlflow
 import mlflow.sklearn
 
+
+print("MLflow Version:", mlflow.__version__)
+
 # Define functions
 def main(args):
     # Enable MLflow autologging
