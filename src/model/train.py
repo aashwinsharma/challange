@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import mlflow
 import mlflow.sklearn
 
+
 def main(args):
     mlflow.sklearn.autolog()
 
@@ -20,6 +21,7 @@ def main(args):
     with mlflow.start_run():
         train_model(args.reg_rate, X_train, X_test, y_train, y_test)
 
+
 def get_csvs_df(path):
     if not os.path.exists(path):
         raise RuntimeError(f"Cannot use non-existent path provided: {path}")
@@ -28,6 +30,7 @@ def get_csvs_df(path):
         raise RuntimeError(f"No CSV files found in provided data path: {path}")
     
     return pd.concat((pd.read_csv(f) for f in csv_files), sort=False)
+
 
 def split_data(df):
     X = df.drop('Diabetic', axis=1)
@@ -53,6 +56,7 @@ def train_model(reg_rate, X_train, X_test, y_train, y_test):
     print(f"Classification Report:\n{report}")
 
     mlflow.log_metric("accuracy", accuracy)
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
