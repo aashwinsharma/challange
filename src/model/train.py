@@ -86,8 +86,8 @@ def parse_args():  # Line 63
     # Parse args
     args = parser.parse_args()
 
-    
     return args
+
 
 # Run script
 if __name__ == "__main__":  # Line 78
