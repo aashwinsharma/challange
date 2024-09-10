@@ -14,4 +14,4 @@ jobs:
         
       - name: Placeholder
         run: |
-          echo "Will add code checks here in the next challenge"
+          echo "we Will add code checks here in the next challenge"
