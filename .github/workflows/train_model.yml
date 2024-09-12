@@ -9,7 +9,7 @@ jobs:
   experiment:
     name: Train in Development Environment
     runs-on: ubuntu-latest
-    environment: development
+    environment: dev  # Use the 'dev' environment
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
@@ -17,7 +17,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
@@ -37,8 +37,8 @@ jobs:
     name: Train in Production Environment
     needs: experiment
     runs-on: ubuntu-latest
-    environment: production
-    if: success()  # Ensure this job runs only if the 'experiment' job succeeds
+    environment: prod  # Use the 'prod' environment or any other environment name you have for production
+    if: success()  # Ensures this job runs only if the 'experiment' job succeeds
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
