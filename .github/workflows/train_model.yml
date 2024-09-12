@@ -1,7 +1,7 @@
 name: Trigger Azure ML Training Job
 
 on:
-  workflow_dispatch:
+  push:
     inputs:
       job_id:
         description: 'Azure ML Job ID to clone and run'
