@@ -11,34 +11,23 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
-      # Install distutils for Python compatibility
-      - name: Install distutils for Python
-        run: |
-          sudo apt-get update
-          sudo apt-get install python3-distutils python3-apt
-
-      # Check out the repository code
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      # Set up Python environment (specify Python 3.10)
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
 
-      # Upgrade pip and setuptools
       - name: Upgrade pip and setuptools
         run: |
           pip install --upgrade pip setuptools
 
-      # Install the dependencies listed in requirements.txt
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Run the model training in development
       - name: Run training in development
-        run: python src/model/train.py --data test
+        run: python src/model/train.py --training_data src/data/test --reg_rate 0.01
 
   production:
     name: Train in Production Environment
@@ -46,31 +35,20 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      # Install distutils for Python compatibility
-      - name: Install distutils for Python
-        run: |
-          sudo apt-get update
-          sudo apt-get install python3-distutils python3-apt
-
-      # Check out the repository code
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      # Set up Python environment (specify Python 3.10)
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
 
-      # Upgrade pip and setuptools
       - name: Upgrade pip and setuptools
         run: |
           pip install --upgrade pip setuptools
 
-      # Install dependencies from requirements.txt
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Run model training in production
       - name: Run training in production
-        run: python src/model/train.py --data diabetes-prod-folder
+        run: python src/model/train.py --training_data src/data/diabetes-prod-folder --reg_rate 0.01
