@@ -19,28 +19,26 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install distutils and other dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-distutils python3-apt
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+          sudo apt-get install -y python3-distutils python3-apt azure-cli
+          pip install -r requirements.txt
 
       - name: Download data from Azure Blob Storage
         run: |
-          sudo apt-get install -y azure-cli
-          az storage blob download-batch -d src/data/test -s UI/2024-09-06_083257_UTC/challange/ --account-name <your-storage-account-name> --account-key <your-storage-account-key>
+          az storage blob download-batch -d src/data/diabetes-dev-folder -s UI/2024-09-06_083257_UTC/challange/ --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
 
       - name: Run training in development
         run: |
-          python src/model/train.py --training_data src/data/test --reg_rate 0.01
+          python src/model/train.py --training_data src/data/diabetes-dev-folder --reg_rate 0.01
 
   production:
     name: Train in Production Environment
     needs: experiment
     runs-on: ubuntu-latest
     environment: production
+    if: success()  # Ensure this job runs only if the 'experiment' job succeeds
     steps:
       - name: Check out the repository
         uses: actions/checkout@v2
@@ -50,19 +48,20 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install distutils and other dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-distutils python3-apt
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+          sudo apt-get install -y python3-distutils python3-apt azure-cli
+          pip install -r requirements.txt
 
       - name: Download data from Azure Blob Storage
         run: |
-          sudo apt-get install -y azure-cli
-          az storage blob download-batch -d src/data/diabetes-prod-folder -s UI/2024-09-06_083257_UTC/challange/ --account-name amlchallanage9075856125 --account-key 6k9ck6tHrb+lrDXIS2kUPEItKIcFuw12G1yDFMnsfnMJnXCVtFvRCKadB8J60Lhj4M+GLd6A2TEk+ASt4OPP2Q==
+          az storage blob download-batch -d src/data/diabetes-prod-folder -s UI/2024-09-06_083257_UTC/challange/ --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
 
       - name: Run training in production
         run: |
           python src/model/train.py --training_data src/data/diabetes-prod-folder --reg_rate 0.01
+
+      - name: Request approval
+        run: echo "Manual approval required for production job."
+        continue-on-error: true
