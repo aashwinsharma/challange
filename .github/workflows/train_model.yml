@@ -17,22 +17,24 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.x'
 
-      - name: Install distutils for Python
+      - name: Install distutils and other dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-distutils python3-apt
 
-      - name: Upgrade pip and setuptools
-        run: |
-          pip install --upgrade pip setuptools
-
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Download data from Azure Blob Storage
+        run: |
+          sudo apt-get install -y azure-cli
+          az storage blob download-batch -d src/data/test -s UI/2024-09-06_083257_UTC/challange/ --account-name <your-storage-account-name> --account-key <your-storage-account-key>
+
       - name: Run training in development
-        run: python src/model/train.py --training_data src/data/test --reg_rate 0.01
+        run: |
+          python src/model/train.py --training_data src/data/test --reg_rate 0.01
 
   production:
     name: Train in Production Environment
@@ -46,19 +48,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.x'
 
-      - name: Install distutils for Python
+      - name: Install distutils and other dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y python3-distutils python3-apt
 
-      - name: Upgrade pip and setuptools
-        run: |
-          pip install --upgrade pip setuptools
-
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Download data from Azure Blob Storage
+        run: |
+          sudo apt-get install -y azure-cli
+          az storage blob download-batch -d src/data/diabetes-prod-folder -s UI/2024-09-06_083257_UTC/challange/ --account-name amlchallanage9075856125 --account-key 6k9ck6tHrb+lrDXIS2kUPEItKIcFuw12G1yDFMnsfnMJnXCVtFvRCKadB8J60Lhj4M+GLd6A2TEk+ASt4OPP2Q==
+
       - name: Run training in production
-        run: python src/model/train.py --training_data src/data/diabetes-prod-folder --reg_rate 0.01
+        run: |
+          python src/model/train.py --training_data src/data/diabetes-prod-folder --reg_rate 0.01
