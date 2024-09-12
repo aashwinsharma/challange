@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       job_id:
-        description: 'Azure ML Job ID to clone and run'
+        description: 'AAzure ML Job ID to clone and run'
         required: true
 
 jobs:
