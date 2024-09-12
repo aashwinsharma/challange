@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
-      # Install distutils for Python 3.12+ compatibility
+      # Install distutils for Python compatibility
       - name: Install distutils for Python
         run: |
           sudo apt-get update
@@ -21,13 +21,13 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      # Set up Python environment (change version if necessary)
+      # Set up Python environment (specify Python 3.10)
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
-      # Upgrade pip and setuptools (to avoid distutils issues)
+      # Upgrade pip and setuptools
       - name: Upgrade pip and setuptools
         run: |
           pip install --upgrade pip setuptools
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      # Install distutils for Python 3.12+ compatibility
+      # Install distutils for Python compatibility
       - name: Install distutils for Python
         run: |
           sudo apt-get update
@@ -56,11 +56,11 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v2
 
-      # Set up Python environment
+      # Set up Python environment (specify Python 3.10)
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
       # Upgrade pip and setuptools
       - name: Upgrade pip and setuptools
