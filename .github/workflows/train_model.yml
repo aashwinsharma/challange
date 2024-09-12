@@ -38,7 +38,7 @@ jobs:
 
       # Run the model training in development
       - name: Run training in development
-        run: python train.py --data test
+        run: python src/model/train.py --data test
 
   production:
     name: Train in Production Environment
@@ -73,4 +73,4 @@ jobs:
 
       # Run model training in production
       - name: Run training in production
-        run: python train.py --data diabetes-prod-folder
+        run: python src/model/train.py --data diabetes-prod-folder
