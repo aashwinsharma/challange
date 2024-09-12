@@ -24,7 +24,7 @@ jobs:
 
     - name: Get Existing Job Configuration
       run: |
-        az ml job show --name ${{ github.event.inputs.job_id }} \
+        az ml job show --name ${{ secrets.JOB_ID }} \
                        --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
                        --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }} > full_job_config.json
 
