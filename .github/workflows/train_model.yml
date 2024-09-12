@@ -11,6 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     steps:
+      - name: Install distutils for Python
+        run: |
+          sudo apt-get update
+          sudo apt-get install python3-distutils
+
       - name: Check out the repository
         uses: actions/checkout@v2
 
