@@ -10,7 +10,7 @@ on:
 jobs:
   trigger-existing-job:
     runs-on: ubuntu-latest
-    environment: dev # Use development environment
+    environment: development # Use development environment
 
     steps:
     - name: Checkout repository
@@ -47,7 +47,7 @@ jobs:
   production-job:
     needs: trigger-existing-job
     runs-on: ubuntu-latest
-    environment: prod # Use production environment, requires approval
+    environment: production # Use production environment, requires approval
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
