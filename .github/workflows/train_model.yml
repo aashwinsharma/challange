@@ -31,7 +31,7 @@ jobs:
 
       - name: Run training in development
         run: |
-          python src/model/train.py --training_data src/data/diabetes-dev-folder --reg_rate 0.01
+          python src/model/train.py --training_data production/data/ --reg_rate 0.01
 
   production:
     name: Train in Production Environment
@@ -56,11 +56,11 @@ jobs:
 
       - name: Download data from Azure Blob Storage
         run: |
-          az storage blob download-batch -d src/data/diabetes-prod-folder -s UI/2024-09-06_083257_UTC/challange/ --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
+          az storage blob download-batch -d production/data/ -s UI/2024-09-06_083257_UTC/challange/ --account-name ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }} --account-key ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
 
       - name: Run training in production
         run: |
-          python src/model/train.py --training_data src/data/diabetes-prod-folder --reg_rate 0.01
+          python src/model/train.py --training_data production/data/ --reg_rate 0.01
 
       - name: Request approval
         run: echo "Manual approval required for production job."
