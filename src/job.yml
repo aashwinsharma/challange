@@ -15,4 +15,4 @@ command: |
   python train.py --training_data ${{inputs.training_data}} --reg_rate 0.01
 environment:
   image: mcr.microsoft.com/azureml/openmpi3.1.2-ubuntu18.04
-compute: your-compute-cluster-name
+compute: challage-compute
