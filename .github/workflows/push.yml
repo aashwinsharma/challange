@@ -3,14 +3,14 @@ name: Train Model Workflow
 on:
   push:
     branches:
-      - production
+      - staging
 
 
 jobs:
   experiment:
     name: Train in Development Environment
     runs-on: ubuntu-latest
-    environment: development
+    environment: staging
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
