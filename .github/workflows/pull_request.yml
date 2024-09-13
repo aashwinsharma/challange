@@ -3,8 +3,7 @@ name: Pull Request Workflow
 on:
   pull_request:
     branches:
-      - development
-
+      - staging
 
 jobs:
   run-flake8:
