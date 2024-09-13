@@ -43,26 +43,3 @@ jobs:
         AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
         AZURE_ML_WORKSPACE: ${{ secrets.AZURE_ML_WORKSPACE }}
   
-  
-  production:
-    name: Train in Production Environment
-    needs: experiment
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Install Azure ML extension
-      run: az extension add -n ml -y
-
-    - name: Create Azure ML Job (Production)
-      run: |
-        az ml job create --file job_config.yaml \
-                         --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
-                         --workspace-name ${{ secrets.AZURE_ML_WORKSPACE }}
