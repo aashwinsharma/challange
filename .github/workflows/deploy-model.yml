@@ -1,0 +1,23 @@
+name: Deploy Model
+
+on:
+  workflow_run:
+    workflows: ["Train Model"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repo
+      uses: actions/checkout@v2
+    - name: Install az ml extension
+      run: az extension add -n ml -y
+    - name: Azure login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Deploy model
+      run: |
+        az ml model deploy --name diabetes-model --model-id deploy-model --endpoint-name diabetes-endpoint
