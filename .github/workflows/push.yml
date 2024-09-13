@@ -3,7 +3,7 @@ name: Train Model Workflow
 on:
   push:
     branches:
-      - production
+      - staging
 
 
 jobs:
