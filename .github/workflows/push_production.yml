@@ -10,7 +10,7 @@ jobs:
   experiment:
     name: Train in Development Environment
     runs-on: ubuntu-latest
-    environment: staging
+    environment: production
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
