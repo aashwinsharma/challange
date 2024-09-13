@@ -8,7 +8,7 @@ on:
 
 jobs:
   experiment:
-    name: Train in Development Environment
+    name: Train in Staging Environment
     runs-on: ubuntu-latest
     environment: staging
     steps:
